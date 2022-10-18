@@ -2,7 +2,7 @@ import { incrementCustomProperty, getCustomProperty, setCustomProperty } from ".
 
 const dinoElem = document.querySelector("[data-dino]");
 const JUMP_SPEED = 0.45;
-const GRAVITY = 0.015;
+const GRAVITY = 0.0015;
 const DINO_FRAME_COUNT = 2;
 const FRAME_TIME = 100
 
@@ -45,9 +45,12 @@ function handleJump(delta){
     if(!isJumping){
         return
     }
+
     incrementCustomProperty(dinoElem, "--bottom", yVelocity* delta)
+
     if(getCustomProperty(dinoElem, "--bottom") <= 0){
         setCustomProperty(dinoElem, "--bottom", 0)
+        isJumping = false;
     }
     yVelocity -= GRAVITY * delta
 }
