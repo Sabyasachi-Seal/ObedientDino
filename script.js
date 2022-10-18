@@ -2,32 +2,44 @@ import { setupGround, updateGround } from "./ground.js";
 
 const WORLD_WIDTH = 100;
 const WORLD_HEIGHT = 30;
-
+const SPEED_SCALE_INCREASE = 0.001;
 const worldElem = document.querySelector("[data-world]");
 
 setPixelToWorldScale();
 window.addEventListener("resize", setPixelToWorldScale);
+document.addEventListener("keydown", handleStart, {once: true});
 
-setupGround();
 
 let lastTime
+let speedScale
 function update(time) {
-  if (lastTime === null) {
+  if (lastTime == null) {
     lastTime = time
     window.requestAnimationFrame(update)
     return
   }
   const delta = time - lastTime
 
-  updateGround(delta)
+  updateGround(delta, speedScale)
+  updateSpeedScale(delta);
 
   lastTime = time
   window.requestAnimationFrame(update)
 }
-window.requestAnimationFrame(update);
+
+function handleStart(){
+  lastTime = null;
+  setupGround();
+  speedScale = 1;
+  window.requestAnimationFrame(update);
+}
+
+function updateSpeedScale(delta) {
+  speedScale += delta * SPEED_SCALE_INCREASE;
+}
 
 function setPixelToWorldScale() {
-  let worldToPixelScale
+  let worldToPixelScale;
   if (window.innerWidth / window.innerHeight < WORLD_WIDTH / WORLD_HEIGHT) {
     worldToPixelScale = window.innerWidth / WORLD_WIDTH;
   } else {
