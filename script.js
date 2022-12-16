@@ -18,16 +18,12 @@ if ("webkitSpeechRecognition" in window) {
   speechRecognition.continuous = true;
   speechRecognition.interimResults = true;
   speechRecognition.onresult = (event) => {
-    let interim_transcript = "";
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
         final_transcript = event.results[i][0].transcript;
-      } else {
-        interim_transcript = event.results[i][0].transcript;
       }
     }
     document.querySelector("#final").innerHTML = final_transcript;
-    document.querySelector("#interim").innerHTML = interim_transcript;
   };
 } else {
   console.log("Speech Recognition Not Available");
