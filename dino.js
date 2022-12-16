@@ -15,15 +15,21 @@ let speechRecognition = new webkitSpeechRecognition();
 speechRecognition.continuous = true;
 speechRecognition.interimResults = true;
 
-const event = new Event('speech');
+let jump = true;
 
+let final_transcript = "";
 
 function checkSpeech(){
-    let final_transcript = "";
+    final_transcript = "";
     speechRecognition.onresult = (event) => {
         final_transcript = event.results[0][0].transcript;
-        if(final_transcript == 'hello') { document.dispatchEvent(new Event('speech')) }
-        document.querySelector("#final").innerHTML = final_transcript;
+        if(!jump){
+            if(final_transcript != 'jump' || final_transcript == 'hello') { 
+                console.log("caled")
+                jump = true;
+                document.dispatchEvent(new Event('speech')) }
+        }
+        else{ jump = false }
     };
 }
 
@@ -35,7 +41,7 @@ export function setupDino(){
     setCustomProperty(dinoElem, "--bottom", 0)
     document.removeEventListener("keydown", onJump)
     document.addEventListener("keydown", onJump)
-    document.addEventListener("speech", onJump)
+    document.addEventListener('speech', onJump)
     speechRecognition.start(); 
 }
 

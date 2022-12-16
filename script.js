@@ -5,7 +5,7 @@ import { setupCactus, updateCactus, getCactusRects} from "./cactus.js";
 
 const WORLD_WIDTH = 100;
 const WORLD_HEIGHT = 30;
-const SPEED_SCALE_INCREASE = 0.00001;
+const SPEED_SCALE_INCREASE = 0.00000001;
 
 const worldElem = document.querySelector("[data-world]");
 const scoreElem = document.querySelector("[data-score]")
@@ -94,5 +94,4 @@ function handleLose(){
     document.addEventListener("keydown", handleStart, {once: true});
     startScreenElem.classList.remove("hide");
   }, 100)
-  speechRecognition.stop();
 }
