@@ -11,6 +11,28 @@ const worldElem = document.querySelector("[data-world]");
 const scoreElem = document.querySelector("[data-score]")
 const startScreenElem = document.querySelector("[data-start-screen]")
 
+let speechRecognition = new webkitSpeechRecognition();
+
+if ("webkitSpeechRecognition" in window) {
+  let final_transcript = "";
+  speechRecognition.continuous = true;
+  speechRecognition.interimResults = true;
+  speechRecognition.onresult = (event) => {
+    let interim_transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript = event.results[i][0].transcript;
+      } else {
+        interim_transcript = event.results[i][0].transcript;
+      }
+    }
+    document.querySelector("#final").innerHTML = final_transcript;
+    document.querySelector("#interim").innerHTML = interim_transcript;
+  };
+} else {
+  console.log("Speech Recognition Not Available");
+}
+
 setPixelToWorldScale();
 window.addEventListener("resize", setPixelToWorldScale);
 document.addEventListener("keydown", handleStart, {once: true});
@@ -47,6 +69,7 @@ function updateScore(delta) {
 }
 
 function handleStart(){
+  speechRecognition.start(); 
   lastTime = null;
   setupGround();
   speedScale = 1;
@@ -94,4 +117,5 @@ function handleLose(){
     document.addEventListener("keydown", handleStart, {once: true});
     startScreenElem.classList.remove("hide");
   }, 100)
+  speechRecognition.stop();
 }
