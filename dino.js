@@ -18,18 +18,18 @@ speechRecognition.interimResults = true;
 let jump = true;
 
 let final_transcript = "";
-
+ 
 function checkSpeech(){
     final_transcript = "";
     speechRecognition.onresult = (event) => {
         final_transcript = event.results[0][0].transcript;
-        if(!jump){
+        if(jump){
             if(final_transcript != 'jump' || final_transcript == 'hello') { 
                 console.log("caled")
-                jump = true;
+                jump = false;
                 document.dispatchEvent(new Event('speech')) }
         }
-        else{ jump = false }
+        else{ jump = true }
     };
 }
 
@@ -46,7 +46,7 @@ export function setupDino(){
 }
 
 export function updateDino(delta, speedScale){
-    checkSpeech()
+    if(jump) checkSpeech()
     handleRun(delta, speedScale)
     handleJump(delta)
 }
