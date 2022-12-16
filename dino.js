@@ -15,18 +15,14 @@ let speechRecognition = new webkitSpeechRecognition();
 speechRecognition.continuous = true;
 speechRecognition.interimResults = true;
 
-const event = new Event('speech', { bubbles: true, cancelable: false });
+const event = new Event('speech');
 
 
 function checkSpeech(){
     let final_transcript = "";
     speechRecognition.onresult = (event) => {
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                final_transcript = event.results[i][0].transcript;
-            }
-        }
-        if(final_transcript == 'hello') { document.dispatchEvent('speech') }
+        final_transcript = event.results[0][0].transcript;
+        if(final_transcript == 'hello') { document.dispatchEvent(new Event('speech')) }
         document.querySelector("#final").innerHTML = final_transcript;
     };
 }
@@ -82,8 +78,7 @@ function handleJump(delta){
 }
 
 function onJump(e){
-    console.log("hello* ${}")
-    if (e.code  !== "Space" || isJumping){
+    if (isJumping){
         return
     }
 
@@ -92,5 +87,6 @@ function onJump(e){
 }
 
 export function setDinoLose(){
+    speechRecognition.stop(); 
     dinoElem.src = "img/dino-lose.png"
 }
