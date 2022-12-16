@@ -11,24 +11,6 @@ const worldElem = document.querySelector("[data-world]");
 const scoreElem = document.querySelector("[data-score]")
 const startScreenElem = document.querySelector("[data-start-screen]")
 
-let speechRecognition = new webkitSpeechRecognition();
-
-if ("webkitSpeechRecognition" in window) {
-  let final_transcript = "";
-  speechRecognition.continuous = true;
-  speechRecognition.interimResults = true;
-  speechRecognition.onresult = (event) => {
-    for (let i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        final_transcript = event.results[i][0].transcript;
-      }
-    }
-    document.querySelector("#final").innerHTML = final_transcript;
-  };
-} else {
-  console.log("Speech Recognition Not Available");
-}
-
 setPixelToWorldScale();
 window.addEventListener("resize", setPixelToWorldScale);
 document.addEventListener("keydown", handleStart, {once: true});
@@ -65,7 +47,6 @@ function updateScore(delta) {
 }
 
 function handleStart(){
-  speechRecognition.start(); 
   lastTime = null;
   setupGround();
   speedScale = 1;
@@ -102,7 +83,7 @@ function isCollision(rect1, rect2) {
     rect1.left < rect2.right &&
     rect1.top < rect2.bottom &&
     rect1.right > rect2.left &&
-    rect1.bottom > rect2.top
+    rect1.bottom > rect2.top && false
   )
 }
 

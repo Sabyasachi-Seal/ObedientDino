@@ -10,6 +10,27 @@ let isJumping;
 let dinoFrame
 let currentFrameTime
 let yVelocity
+
+let speechRecognition = new webkitSpeechRecognition();
+speechRecognition.continuous = true;
+speechRecognition.interimResults = true;
+
+const event = new Event('speech', { bubbles: true, cancelable: false });
+
+
+function checkSpeech(){
+    let final_transcript = "";
+    speechRecognition.onresult = (event) => {
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                final_transcript = event.results[i][0].transcript;
+            }
+        }
+        if(final_transcript == 'hello') { document.dispatchEvent('speech') }
+        document.querySelector("#final").innerHTML = final_transcript;
+    };
+}
+
 export function setupDino(){
     currentFrameTime = 0;
     isJumping = false
@@ -18,9 +39,12 @@ export function setupDino(){
     setCustomProperty(dinoElem, "--bottom", 0)
     document.removeEventListener("keydown", onJump)
     document.addEventListener("keydown", onJump)
+    document.addEventListener("speech", onJump)
+    speechRecognition.start(); 
 }
 
 export function updateDino(delta, speedScale){
+    checkSpeech()
     handleRun(delta, speedScale)
     handleJump(delta)
 }
@@ -58,6 +82,7 @@ function handleJump(delta){
 }
 
 function onJump(e){
+    console.log("hello* ${}")
     if (e.code  !== "Space" || isJumping){
         return
     }
